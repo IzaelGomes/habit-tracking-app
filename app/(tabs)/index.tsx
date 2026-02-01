@@ -1,6 +1,9 @@
+import { getMonthName } from "@/utils/dateHelpers";
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import { BotMessageSquare, CircleArrowRight } from "lucide-react-native";
 import { useState } from "react";
-import { ActivityIndicator, Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import CreateHabitModal from "../../components/CreateHabitModal";
 import { useAuth } from "../../context/AuthContext";
 import { useCreateHabit } from "../../services/hooks/useCreatehabit";
@@ -11,12 +14,7 @@ export default function DashboardScreen() {
   const { data: totalHabits, isLoading } = useHabitsCount();
   const [modalVisible, setModalVisible] = useState(false);
   const createHabitMutation = useCreateHabit();
-
-  const currentDate = new Date();
-  const monthName = currentDate.toLocaleDateString("en-US", {
-    month: "long",
-    year: "numeric",
-  });
+  const router = useRouter()
 
   const handleCreateHabit = (name: string, weekDays: number[]) => {
     createHabitMutation.mutate(
@@ -35,42 +33,53 @@ export default function DashboardScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.content}>
-        <View style={styles.headerSection}>
-          <Text style={styles.greeting}>Hello, {user?.username || "User"}!</Text>
-          <Text style={styles.subtitle}>Track your habits</Text>
-        </View>
+      <ScrollView>
+        <View style={styles.content}>
+          <View style={styles.headerSection}>
+            <Text style={styles.greeting}>Hello, {user?.username || "User"}!</Text>
+            <Text style={styles.subtitle}>Track your habits</Text>
+          </View>
 
         {/* Stats Card */}
-        <View style={styles.statsCard}>
-          <View style={styles.statsHeader}>
-            <Ionicons name="calendar" size={32} color="#007AFF" />
-            <Text style={styles.monthText}>{monthName}</Text>
+          <View style={styles.statsCard}>
+            <View style={styles.statsHeader}>
+              <Ionicons name="calendar" size={32} color="#007AFF" />
+              <Text style={styles.monthText}>{getMonthName(new Date())}</Text>
+            </View>
+
+            <View style={styles.statsBody}>
+              {isLoading ? (
+                <ActivityIndicator size="large" color="#007AFF" />
+              ) : (
+                <>
+                  <Text style={styles.statsNumber}>{totalHabits ?? 0}</Text>
+                  <Text style={styles.statsLabel}>
+                    Total Habits
+                  </Text>
+                </>
+              )}
+            </View>
+
+            <View style={styles.statsFooter}>
+              <Ionicons name="trophy" size={20} color="#34C759" />
+              <Text style={styles.statsFooterText}>
+                {!isLoading && (totalHabits === 0 || totalHabits === undefined)
+                  ? "Start tracking your habits today!"
+                  : "Keep up the great work!"}
+              </Text>
+            </View>
           </View>
 
-          <View style={styles.statsBody}>
-            {isLoading ? (
-              <ActivityIndicator size="large" color="#007AFF" />
-            ) : (
-              <>
-                <Text style={styles.statsNumber}>{totalHabits ?? 0}</Text>
-                <Text style={styles.statsLabel}>
-                  Total Habits
-                </Text>
-              </>
-            )}
-          </View>
-
-          <View style={styles.statsFooter}>
-            <Ionicons name="trophy" size={20} color="#34C759" />
-            <Text style={styles.statsFooterText}>
-              {!isLoading && (totalHabits === 0 || totalHabits === undefined)
-                ? "Start tracking your habits today!"
-                : "Keep up the great work!"}
-            </Text>
-          </View>
-        </View>
+        <TouchableOpacity style={styles.assistantSection} onPress={() => router.push("/assistant")}>
+          <View style={styles.assistantText}>
+            <BotMessageSquare size={24} color="#333" />
+            <Text>Talk to assistant</Text>
+            </View>
+            <CircleArrowRight size={24} color="#333" />
+        </TouchableOpacity>
       </View>
+    </ScrollView>
+
 
       <CreateHabitModal
         visible={modalVisible}
@@ -178,5 +187,21 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 6,
     elevation: 8,
+  },
+
+  assistantSection: {
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: "#fff",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 10,
+    borderRadius: 30,
+  },
+  assistantText: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
   },
 });

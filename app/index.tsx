@@ -1,3 +1,4 @@
+import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
@@ -43,8 +44,13 @@ export default function LoginScreen() {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
+
       <View style={styles.content}>
-        <Text style={styles.title}>Habit Tracker</Text>
+      <Image
+      source={require("../assets/images/login_habit.png")}
+      style={{width: 250, height: 250}}
+      />
+        <Text style={styles.title}>Sign in</Text>
         <Text style={styles.subtitle}>Track your daily habits</Text>
 
         <View style={styles.form}>

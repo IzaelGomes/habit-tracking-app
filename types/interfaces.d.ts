@@ -36,3 +36,21 @@ export interface AppContextType {
   getMonthlyCompletedCount: () => number;
 }
 
+export interface ChatMessage {
+  role: 'USER' | 'ASSISTANT';
+  content: string;
+  createdAt: string;
+}
+
+export interface ChatResponse {
+  message: string;
+}
+
+export interface ChatHistoryResponse {
+  role: 'USER' | 'ASSISTANT';
+  content: string;
+  createdAt: string;
+  thread: {
+    id: string;
+  };
+}
