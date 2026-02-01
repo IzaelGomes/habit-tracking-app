@@ -15,3 +15,7 @@ export function getWeekdayName(date: Date): string {
 export function isFutureDate(date: Date): boolean {
   return isFuture(date);
 }
+
+export function getMonthName(date: Date): string {
+  return date.toLocaleDateString("en-US", {month: "long", year: "numeric"});
+}
