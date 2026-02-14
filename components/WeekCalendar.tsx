@@ -1,5 +1,5 @@
+import { formatDayShort } from "@/utils/dateHelpers";
 import { StyleSheet, Text, View } from "react-native";
-import { formatDayShort } from "../utils/dateHelpers";
 
 interface WeekCalendarProps {
   weekDates: Date[];

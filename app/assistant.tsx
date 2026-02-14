@@ -69,7 +69,7 @@ export default function AssistantScreen() {
         setMessages((prev) => prev.filter((msg, index) => index !== prev.length - 1));
         Alert.alert(
           'Error',
-          error?.response?.data?.message || 'Failed to send message. Please try again.'
+          error?.message || error?.response?.data?.message || 'Failed to send message. Please try again.'
         );
       },
     });

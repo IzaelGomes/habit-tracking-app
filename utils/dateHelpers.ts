@@ -19,3 +19,7 @@ export function isFutureDate(date: Date): boolean {
 export function getMonthName(date: Date): string {
   return date.toLocaleDateString("en-US", {month: "long", year: "numeric"});
 }
+
+export function formatDayShort(date: Date): string {
+  return date.toLocaleDateString("en-US", { weekday: "short" });
+}
