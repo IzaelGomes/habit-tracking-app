@@ -5,13 +5,24 @@ import { BotMessageSquare, CircleArrowRight } from "lucide-react-native";
 import { useState } from "react";
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import CreateHabitModal from "../../components/CreateHabitModal";
+import HabitHeatmap from "../../components/charts/HabitHeatmap";
+import TodayProgressRing from "../../components/charts/TodayProgressRing";
+import WeeklyProgressChart from "../../components/charts/WeeklyProgressChart";
 import { useAuth } from "../../context/AuthContext";
 import { useCreateHabit } from "../../services/hooks/useCreatehabit";
 import { useHabitsCount } from "../../services/hooks/useHabitsCount";
+import { useHeatmapData } from "../../services/hooks/useHeatmapData";
+import { useTodayStats } from "../../services/hooks/useTodayStats";
+import { useTopHabits } from "../../services/hooks/useTopHabits";
+import { useWeeklyStats } from "../../services/hooks/useWeeklyStats";
 
 export default function DashboardScreen() {
   const { user } = useAuth();
   const { data: totalHabits, isLoading } = useHabitsCount();
+  const { data: weeklyStats, isLoading: isLoadingWeekly } = useWeeklyStats();
+  const { data: todayStats, isLoading: isLoadingToday } = useTodayStats();
+  const { data: topHabits, isLoading: isLoadingTopHabits } = useTopHabits();
+  const { data: heatmapData, isLoading: isLoadingHeatmap } = useHeatmapData();
   const [modalVisible, setModalVisible] = useState(false);
   const createHabitMutation = useCreateHabit();
   const router = useRouter()
@@ -69,14 +80,21 @@ export default function DashboardScreen() {
               </Text>
             </View>
           </View>
-
-        <TouchableOpacity style={styles.assistantSection} onPress={() => router.push("/assistant")}>
+          <TouchableOpacity style={styles.assistantSection} onPress={() => router.push("/assistant")}>
           <View style={styles.assistantText}>
             <BotMessageSquare size={24} color="#333" />
             <Text>Talk to assistant</Text>
             </View>
             <CircleArrowRight size={24} color="#333" />
         </TouchableOpacity>
+
+          <TodayProgressRing data={todayStats} isLoading={isLoadingToday} />
+
+          <WeeklyProgressChart data={weeklyStats} isLoading={isLoadingWeekly} />
+
+          {/* <TopHabitsChart data={topHabits} isLoading={isLoadingTopHabits} /> */}
+
+          <HabitHeatmap data={heatmapData} isLoading={isLoadingHeatmap} />
       </View>
     </ScrollView>
 

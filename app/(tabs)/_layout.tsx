@@ -36,6 +36,14 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="assistant"
+        options={{
+          title: "Assistant",
+          headerShown: true,
+        }}
+
+      />
     </Tabs>
   );
 }
